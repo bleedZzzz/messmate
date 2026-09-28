@@ -11,9 +11,9 @@ Tiffin Optimizer is a multi-agent AI system designed to match students and bache
 - [x] **M2: Demand and Match agents**
 - [x] **M3: LLM layer and Menu agent**
 - [x] **M4: Deal agent**
-- [ ] **M5: LangGraph orchestrator**
-- [ ] **M6: FastAPI layer**
-- [ ] **M7: Next.js frontend**
+- [x] **M5: LangGraph orchestrator**
+- [x] **M6: FastAPI layer**
+- [x] **M7: Next.js frontend**
 - [ ] **M8: Observability and evaluation**
 - [ ] **M9: Docker, CI/CD, deployment**
 - [ ] **M10: Polish and portfolio material**
