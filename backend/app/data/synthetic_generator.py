@@ -187,21 +187,28 @@ def _make_dishes(
     diet_types: list[str],
 ) -> list[Dish]:
     """Pick 25–40 dishes from the catalog matching provider cuisines and diets."""
-    eligible = [d for d in _DISH_CATALOG if d[3] in cuisines and d[2] in diet_types]
-    if len(eligible) < 25:
-        # supplement with all-cuisine dishes to hit minimum
-        eligible = [d for d in _DISH_CATALOG if d[2] in diet_types]
+    lunch_pool = [d for d in _DISH_CATALOG if d[1] == "lunch" and d[2] in diet_types]
+    pref_lunch = [d for d in lunch_pool if d[3] in cuisines]
+    lunch_candidates = pref_lunch if len(pref_lunch) >= 12 else lunch_pool
+    min_l = min(12, len(lunch_candidates))
+    max_l = max(min_l, min(20, len(lunch_candidates)))
+    n_lunch = rng.randint(min_l, max_l)
+    picked_lunch = rng.sample(lunch_candidates, n_lunch)
 
-    target = rng.randint(25, min(40, len(eligible)))
-    picked = rng.sample(eligible, min(target, len(eligible)))
+    dinner_pool = [d for d in _DISH_CATALOG if d[1] == "dinner" and d[2] in diet_types]
+    pref_dinner = [d for d in dinner_pool if d[3] in cuisines]
+    dinner_candidates = pref_dinner if len(pref_dinner) >= 10 else dinner_pool
+    min_d = min(10, len(dinner_candidates))
+    max_d = max(min_d, min(20, len(dinner_candidates)))
+    n_dinner = rng.randint(min_d, max_d)
+    picked_dinner = rng.sample(dinner_candidates, n_dinner)
 
-    # Ensure at least one dish per slot
-    slots_present = {d[1] for d in picked}
-    for needed_slot in ("lunch", "dinner"):
-        if needed_slot not in slots_present:
-            candidates = [d for d in _DISH_CATALOG if d[1] == needed_slot and d[2] in diet_types]
-            if candidates:
-                picked.append(rng.choice(candidates))
+    picked = picked_lunch + picked_dinner
+    if len(picked) < 25:
+        already = set(picked)
+        extra = [d for d in _DISH_CATALOG if d[2] in diet_types and d not in already]
+        needed = 25 - len(picked)
+        picked.extend(rng.sample(extra, min(needed, len(extra))))
 
     dishes: list[Dish] = []
     for i, (name, slot, diet, cuisine, main_item, cost_tier) in enumerate(picked):
