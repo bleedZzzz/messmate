@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "tiffin-optimizer-backend"
 version = "0.1.0"
@@ -56,3 +60,7 @@ module = ["app.agents.*", "app.models.*"]
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 check_untyped_defs = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
