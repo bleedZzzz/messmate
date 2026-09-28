@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: #fdfbf7;
+    --foreground: #1c1917;
+    --card: #ffffff;
+    --card-foreground: #1c1917;
+    --popover: #ffffff;
+    --popover-foreground: #1c1917;
+    --primary: #ea580c;
+    --primary-foreground: #ffffff;
+    --secondary: #fff7ed;
+    --secondary-foreground: #9a3412;
+    --muted: #f5f5f4;
+    --muted-foreground: #78716c;
+    --accent: #fed7aa;
+    --accent-foreground: #9a3412;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #e7e5e4;
+    --input: #e7e5e4;
+    --ring: #ea580c;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: #0c0a09;
+    --foreground: #f5f5f4;
+    --card: #1c1917;
+    --card-foreground: #f5f5f4;
+    --popover: #1c1917;
+    --popover-foreground: #f5f5f4;
+    --primary: #f97316;
+    --primary-foreground: #ffffff;
+    --secondary: #292524;
+    --secondary-foreground: #fdba74;
+    --muted: #292524;
+    --muted-foreground: #a8a29e;
+    --accent: #431407;
+    --accent-foreground: #fdba74;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #292524;
+    --input: #292524;
+    --ring: #f97316;
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Glassmorphism and glow utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark .glass-panel {
+  background: rgba(28, 25, 23, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
