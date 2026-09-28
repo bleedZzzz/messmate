@@ -1,5 +1,6 @@
 """Agents package for Tiffin Optimizer."""
 
+from app.agents.deal import DealAgent, compute_volume_discount, negotiate, run_deal_agent
 from app.agents.demand import ClusterSource, DemandRequest, DemandResult, run_demand_agent
 from app.agents.geo import haversine_km
 from app.agents.match import run_match_agent
@@ -9,13 +10,17 @@ from app.agents.menu_validator import MenuValidationError, is_valid_menu, valida
 
 __all__ = [
     "ClusterSource",
+    "DealAgent",
     "DemandRequest",
     "DemandResult",
     "MenuValidationError",
     "build_menu_prompt",
+    "compute_volume_discount",
     "generate_fallback_menu",
     "haversine_km",
     "is_valid_menu",
+    "negotiate",
+    "run_deal_agent",
     "run_demand_agent",
     "run_match_agent",
     "run_menu_agent",
