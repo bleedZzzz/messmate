@@ -61,11 +61,13 @@ class FakeProvider:
     def __init__(
         self,
         canned_response: BaseModel | dict[str, Any] | None = None,
+        canned_responses: dict[type[Any], Any] | None = None,
         mode: Literal["valid", "invalid", "timeout", "unavailable"] = "valid",
         delay_seconds: float = 0.0,
         failures_before_success: int = 0,
     ) -> None:
         self.canned_response = canned_response
+        self.canned_responses = canned_responses or {}
         self.mode = mode
         self.delay_seconds = delay_seconds
         self.failures_before_success = failures_before_success
@@ -102,17 +104,18 @@ class FakeProvider:
                 raise LLMUnavailable(f"Simulated schema validation failure: {exc}") from exc
 
         # Mode == "valid"
-        if self.canned_response is None:
+        target_resp = self.canned_responses.get(schema, self.canned_response)
+        if target_resp is None:
             raise LLMUnavailable("FakeProvider configured with no canned_response")
 
-        if isinstance(self.canned_response, schema):
-            return self.canned_response
+        if isinstance(target_resp, schema):
+            return target_resp
 
-        if isinstance(self.canned_response, dict):
-            return schema.model_validate(self.canned_response)
+        if isinstance(target_resp, dict):
+            return schema.model_validate(target_resp)
 
         raise LLMUnavailable(
-            f"Canned response type {type(self.canned_response)} not compatible with {schema}"
+            f"Canned response type {type(target_resp)} not compatible with {schema}"
         )
 
 

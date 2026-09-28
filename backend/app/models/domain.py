@@ -126,3 +126,30 @@ class TraceStep(BaseModel):
     used_llm: bool
     fallback_used: bool
     error: str | None = None
+
+
+class OptimizeRequest(BaseModel):
+    """Request payload for full pipeline optimization."""
+
+    area_id: str | None = None
+    area: str | None = None
+    cluster_id: str | None = None
+    lat: float | None = None
+    lon: float | None = None
+    diet: Diet | None = None
+    budget_max: float | None = None
+    cuisines: list[str] = Field(default_factory=list)
+    radius_km: float = 5.0
+    top_n: int = 5
+
+
+class OptimizeResponse(BaseModel):
+    """Response payload returned by full pipeline optimization."""
+
+    cluster: DemandCluster | None = None
+    matches: list[ProviderMatch] = Field(default_factory=list)
+    top_provider: Provider | None = None
+    menu: MenuPlan | None = None
+    negotiation: NegotiationResult | None = None
+    trace: list[TraceStep] = Field(default_factory=list)
+    errors: list[str] = Field(default_factory=list)
