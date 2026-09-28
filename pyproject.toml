@@ -1,0 +1,56 @@
+[project]
+name = "messmate"
+version = "0.1.0"
+description = "Tiffin Optimizer: Multi-agent AI system"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "tiffin-optimizer-backend",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=5.0.0",
+    "hypothesis>=6.112.0",
+    "ruff>=0.6.0",
+    "mypy>=1.11.0",
+]
+
+[tool.uv.sources]
+tiffin-optimizer-backend = { workspace = true }
+
+[tool.uv.workspace]
+members = ["backend"]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["backend"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "--cov=backend/app --cov-report=term-missing"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+mypy_path = "backend"
+
+[[tool.mypy.overrides]]
+module = ["app.agents.*", "app.models.*"]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
