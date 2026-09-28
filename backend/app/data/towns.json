@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Uluberia",
+    "lat": 22.4700,
+    "lon": 88.1100,
+    "areas": [
+      {"name": "College Para", "lat": 22.4720, "lon": 88.1120, "type": "college"},
+      {"name": "Station Road", "lat": 22.4680, "lon": 88.1080, "type": "hostel"},
+      {"name": "Bazar Para", "lat": 22.4710, "lon": 88.1060, "type": "market"}
+    ]
+  },
+  {
+    "name": "Howrah",
+    "lat": 22.5958,
+    "lon": 88.2636,
+    "areas": [
+      {"name": "Shibpur", "lat": 22.5700, "lon": 88.2700, "type": "college"},
+      {"name": "Belur", "lat": 22.6300, "lon": 88.3500, "type": "hostel"},
+      {"name": "Dasnagar", "lat": 22.5800, "lon": 88.2800, "type": "hostel"},
+      {"name": "Liluah", "lat": 22.6100, "lon": 88.3400, "type": "market"}
+    ]
+  },
+  {
+    "name": "Kolkata",
+    "lat": 22.5726,
+    "lon": 88.3639,
+    "areas": [
+      {"name": "Jadavpur", "lat": 22.4990, "lon": 88.3710, "type": "college"},
+      {"name": "Salt Lake Sector V", "lat": 22.5730, "lon": 88.4340, "type": "hostel"},
+      {"name": "Garia", "lat": 22.4650, "lon": 88.3850, "type": "hostel"},
+      {"name": "College Street", "lat": 22.5780, "lon": 88.3630, "type": "college"},
+      {"name": "Baghajatin", "lat": 22.4870, "lon": 88.3730, "type": "hostel"}
+    ]
+  },
+  {
+    "name": "Durgapur",
+    "lat": 23.5204,
+    "lon": 87.3119,
+    "areas": [
+      {"name": "NIT Campus", "lat": 23.5400, "lon": 87.2900, "type": "college"},
+      {"name": "City Centre", "lat": 23.5200, "lon": 87.3100, "type": "hostel"},
+      {"name": "Benachity", "lat": 23.5100, "lon": 87.3200, "type": "market"},
+      {"name": "Bidhannagar", "lat": 23.5350, "lon": 87.3050, "type": "hostel"}
+    ]
+  },
+  {
+    "name": "Kharagpur",
+    "lat": 22.3460,
+    "lon": 87.2320,
+    "areas": [
+      {"name": "IIT Campus", "lat": 22.3200, "lon": 87.3100, "type": "college"},
+      {"name": "Talbagicha", "lat": 22.3400, "lon": 87.2400, "type": "hostel"},
+      {"name": "Technology Market", "lat": 22.3350, "lon": 87.2500, "type": "market"}
+    ]
+  },
+  {
+    "name": "Medinipur",
+    "lat": 22.4260,
+    "lon": 87.3198,
+    "areas": [
+      {"name": "Vidyasagar University Area", "lat": 22.4400, "lon": 87.3000, "type": "college"},
+      {"name": "College Road", "lat": 22.4280, "lon": 87.3180, "type": "hostel"},
+      {"name": "Station Para", "lat": 22.4240, "lon": 87.3220, "type": "market"}
+    ]
+  },
+  {
+    "name": "Siliguri",
+    "lat": 26.7271,
+    "lon": 88.3953,
+    "areas": [
+      {"name": "NJP Area", "lat": 26.7100, "lon": 88.4300, "type": "hostel"},
+      {"name": "Pradhan Nagar", "lat": 26.7230, "lon": 88.4150, "type": "college"},
+      {"name": "Hill Cart Road", "lat": 26.7350, "lon": 88.3900, "type": "market"},
+      {"name": "Matigara", "lat": 26.7000, "lon": 88.3800, "type": "college"}
+    ]
+  },
+  {
+    "name": "Asansol",
+    "lat": 23.6888,
+    "lon": 86.9661,
+    "areas": [
+      {"name": "Burnpur", "lat": 23.6350, "lon": 86.8600, "type": "hostel"},
+      {"name": "Ushagram", "lat": 23.6900, "lon": 86.9600, "type": "college"},
+      {"name": "Apcar Garden", "lat": 23.6850, "lon": 86.9550, "type": "hostel"}
+    ]
+  }
+]
