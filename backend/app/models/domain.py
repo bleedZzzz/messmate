@@ -139,8 +139,8 @@ class OptimizeRequest(BaseModel):
     diet: Diet | None = None
     budget_max: float | None = None
     cuisines: list[str] = Field(default_factory=list)
-    radius_km: float = 5.0
-    top_n: int = 5
+    radius_km: float = Field(default=5.0, gt=0)
+    top_n: int = Field(default=5, ge=1, le=50)
 
 
 class OptimizeResponse(BaseModel):

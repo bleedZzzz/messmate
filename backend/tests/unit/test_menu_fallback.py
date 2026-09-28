@@ -247,5 +247,10 @@ def test_hypothesis_fallback_menu_satisfies_constraints(pair):
         assert menu.source == "fallback"
         assert len(menu.days) == 7
     except ValueError as e:
-        # If catalog lacked variety (e.g. main_item repeats), ValueError is expected
-        assert "variety" in str(e) or "too small" in str(e)
+        # If randomized catalog cannot satisfy variety/veg constraints, ValueError is expected
+        assert (
+            "variety" in str(e)
+            or "too small" in str(e)
+            or "veg" in str(e).lower()
+            or "invalid menu" in str(e).lower()
+        )

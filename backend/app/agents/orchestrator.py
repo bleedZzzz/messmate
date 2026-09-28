@@ -80,6 +80,40 @@ class InMemoryProviderSource:
         return self._providers.get(provider_id)
 
 
+class DbClusterSource:
+    """Database-backed ClusterSource using SQLAlchemy Session."""
+
+    def __init__(self, session: Any) -> None:
+        self.session = session
+
+    def get_all(self) -> list[DemandCluster]:
+        from app.db import repositories
+
+        return repositories.get_all_clusters(self.session)
+
+    def get_by_id(self, cluster_id: str) -> DemandCluster | None:
+        from app.db import repositories
+
+        return repositories.get_cluster_by_id(self.session, cluster_id)
+
+
+class DbProviderSource:
+    """Database-backed ProviderSource using SQLAlchemy Session."""
+
+    def __init__(self, session: Any) -> None:
+        self.session = session
+
+    def get_all(self) -> list[Provider]:
+        from app.db import repositories
+
+        return repositories.get_approved_providers(self.session)
+
+    def get_by_id(self, provider_id: str) -> Provider | None:
+        from app.db import repositories
+
+        return repositories.get_provider_by_id(self.session, provider_id)
+
+
 # ---------------------------------------------------------------------------
 # PipelineState (ARCHITECTURE.md §6.5)
 # ---------------------------------------------------------------------------
@@ -184,22 +218,22 @@ def create_demand_node(
         req = state.get("request") or OptimizeRequest()
         source = cluster_source or InMemoryClusterSource([])
 
-        demand_req = DemandRequest(
-            area=req.area,
-            lat=req.lat,
-            lon=req.lon,
-            radius_km=req.radius_km,
-            diet=req.diet,
-            budget_max=req.budget_max,
-            cluster_id=req.cluster_id or req.area_id,
-        )
+        def _execute_demand() -> DemandResult:
+            demand_req = DemandRequest(
+                area=req.area,
+                lat=req.lat,
+                lon=req.lon,
+                radius_km=req.radius_km,
+                diet=req.diet,
+                budget_max=req.budget_max,
+                cluster_id=req.cluster_id or req.area_id,
+            )
+            return run_demand_agent(demand_req, source)
 
         demand_res: DemandResult | None = await run_step(
             state,
             "demand",
-            run_demand_agent,
-            demand_req,
-            source,
+            _execute_demand,
             used_llm=False,
             fallback_used=False,
         )

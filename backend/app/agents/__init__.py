@@ -8,6 +8,8 @@ from app.agents.menu import build_menu_prompt, run_menu_agent
 from app.agents.menu_fallback import generate_fallback_menu
 from app.agents.menu_validator import MenuValidationError, is_valid_menu, validate_menu
 from app.agents.orchestrator import (
+    DbClusterSource,
+    DbProviderSource,
     InMemoryClusterSource,
     InMemoryProviderSource,
     PipelineState,
@@ -19,6 +21,8 @@ from app.agents.orchestrator import (
 
 __all__ = [
     "ClusterSource",
+    "DbClusterSource",
+    "DbProviderSource",
     "DealAgent",
     "DemandRequest",
     "DemandResult",
