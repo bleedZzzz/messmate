@@ -8,7 +8,7 @@ import { api } from "@/lib/api"
 import { ProviderCard } from "@/components/provider-card"
 import { AgentTracePanel } from "@/components/trace-panel"
 import { SkeletonLoader } from "@/components/skeleton-loader"
-import { Users, MapPin, IndianRupee, ArrowLeft, RefreshCw, AlertCircle } from "lucide-react"
+import { Users, MapPin, IndianRupee, ArrowLeft, RefreshCw, AlertCircle, Compass, Sparkles, Filter } from "lucide-react"
 
 function ResultsContent() {
   const searchParams = useSearchParams()
@@ -36,12 +36,10 @@ function ResultsContent() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-6 py-6">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-2">
-            <div className="h-7 bg-stone-200 dark:bg-stone-800 rounded-md w-64 animate-pulse" />
-            <div className="h-4 bg-stone-200 dark:bg-stone-800 rounded-md w-96 animate-pulse" />
-          </div>
+      <div className="flex flex-col gap-8 py-6">
+        <div className="cyber-panel p-6 rounded-3xl border border-white/[0.08] flex flex-col gap-3">
+          <div className="h-6 bg-white/[0.08] rounded-xl w-64 animate-pulse" />
+          <div className="h-4 bg-white/[0.05] rounded-xl w-96 animate-pulse" />
         </div>
         <SkeletonLoader count={4} />
       </div>
@@ -50,19 +48,23 @@ function ResultsContent() {
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center rounded-3xl border border-red-200 dark:border-red-900/60 bg-red-50/50 dark:bg-red-950/20 gap-4 my-8">
-        <AlertCircle className="w-10 h-10 text-red-500" />
-        <h2 className="text-lg font-bold text-red-900 dark:text-red-200">
-          Optimization Pipeline Encountered An Error
-        </h2>
-        <p className="text-xs text-red-700 dark:text-red-300 max-w-md">
-          {error instanceof Error ? error.message : "Unable to reach server. Please ensure the backend is running."}
-        </p>
+      <div className="flex flex-col items-center justify-center p-12 text-center rounded-3xl border border-red-500/30 bg-red-950/20 gap-5 my-8 cyber-panel">
+        <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400">
+          <AlertCircle className="w-7 h-7" />
+        </div>
+        <div className="flex flex-col gap-1 max-w-md">
+          <h2 className="text-lg font-bold font-mono text-red-200">
+            Optimization Pipeline Execution Error
+          </h2>
+          <p className="text-xs text-neutral-400 leading-relaxed">
+            {error instanceof Error ? error.message : "Unable to reach FastAPI backend server. Ensure backend is running at http://localhost:8000."}
+          </p>
+        </div>
         <button
           onClick={() => refetch()}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition-colors shadow-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold transition-all shadow-lg cursor-pointer"
         >
-          <RefreshCw className="w-3.5 h-3.5" /> Try Again
+          <RefreshCw className="w-3.5 h-3.5" /> Re-trigger Pipeline
         </button>
       </div>
     )
@@ -75,45 +77,51 @@ function ResultsContent() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Top Navigation & Cluster Banner */}
+      {/* Top Breadcrumb & Controls */}
       <div className="flex flex-col gap-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 dark:text-stone-400 hover:text-orange-600 transition-colors self-start"
+          className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-neutral-400 hover:text-amber-400 transition-colors self-start px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.08]"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Search Filter
+          <ArrowLeft className="w-3.5 h-3.5" /> Return to Swarm Console
         </Link>
 
+        {/* Matched Demand Cluster Mission Briefing */}
         {cluster ? (
-          <div className="p-5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-orange-600">
-                Matched Demand Cluster
-              </span>
-              <h2 className="text-xl font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-orange-600 shrink-0" />
+          <div className="p-6 sm:p-8 rounded-3xl cyber-panel-glow flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+            <div className="flex flex-col gap-2 relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-[10px] uppercase font-bold w-fit">
+                <Compass className="w-3 h-3 text-amber-400" />
+                <span>Geospatial Demand Cluster Found</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-2.5">
+                <MapPin className="w-6 h-6 text-amber-400 shrink-0" />
                 {cluster.area}, {cluster.town}
-              </h2>
-              <p className="text-xs text-stone-500">
-                Local student cluster with shared dietary and price preferences
+              </h1>
+              <p className="text-xs text-neutral-400 font-mono">
+                Centroid: {cluster.lat.toFixed(4)}°N, {cluster.lon.toFixed(4)}°E · Radius: {radiusKm} km
               </p>
             </div>
 
-            <div className="flex items-center gap-4 text-xs font-medium text-stone-600 dark:text-stone-400 bg-stone-50 dark:bg-stone-800/60 p-3 rounded-xl border border-stone-100 dark:border-stone-800">
-              <span className="flex items-center gap-1">
-                <Users className="w-4 h-4 text-orange-500" />
-                <strong>{cluster.headcount}</strong> Students
-              </span>
-              <span>·</span>
-              <span className="flex items-center gap-1">
-                <IndianRupee className="w-4 h-4 text-emerald-500" />
-                Ceiling: <strong>₹{Math.round(cluster.budget_ceiling_monthly)}</strong>/mo
-              </span>
+            <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-neutral-300 bg-[#0a0c10]/90 p-4 rounded-2xl border border-white/[0.1] relative z-10 shadow-inner">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-amber-400" />
+                <span>
+                  <strong className="text-white text-sm">{cluster.headcount}</strong> Students
+                </span>
+              </div>
+              <span className="text-neutral-600">|</span>
+              <div className="flex items-center gap-2">
+                <IndianRupee className="w-4 h-4 text-emerald-400" />
+                <span>
+                  Ceiling: <strong className="text-white text-sm">₹{Math.round(cluster.budget_ceiling_monthly)}</strong>/mo
+                </span>
+              </div>
             </div>
           </div>
         ) : (
-          <div className="p-4 rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20 text-xs text-amber-800 dark:text-amber-300">
-            No specific cluster selected; ranking active providers across town.
+          <div className="p-4 rounded-2xl cyber-panel text-xs font-mono text-amber-300 border border-amber-500/30">
+            Town-wide broad search active. Displaying top qualifying verified mess providers.
           </div>
         )}
       </div>
@@ -122,40 +130,48 @@ function ResultsContent() {
       <AgentTracePanel trace={trace} errors={errors} />
 
       {/* Ranked Results List */}
-      <section className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <h2 className="font-bold text-lg text-stone-900 dark:text-stone-100">
-            Ranked Tiffin Providers ({matches.length})
-          </h2>
-          <span className="text-xs text-stone-500">
-            Sorted by 5-Factor Match Quality
+      <section className="flex flex-col gap-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/[0.08] pb-3">
+          <div className="flex items-center gap-2">
+            <h2 className="font-mono font-bold text-lg text-white">
+              Ranked Tiffin Providers
+            </h2>
+            <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-bold">
+              {matches.length} Verified
+            </span>
+          </div>
+
+          <span className="text-xs font-mono text-neutral-500">
+            Deterministic 5-Factor Weighted Score
           </span>
         </div>
 
         {matches.length === 0 ? (
-          <div className="p-12 text-center rounded-3xl border border-dashed border-stone-300 dark:border-stone-800 bg-white/40 dark:bg-stone-900/40 flex flex-col items-center gap-3">
-            <MapPin className="w-8 h-8 text-stone-400" />
-            <h3 className="font-bold text-stone-800 dark:text-stone-200 text-sm">
-              No Qualifying Providers Found
-            </h3>
-            <p className="text-xs text-stone-500 max-w-sm">
-              Try increasing your radius slider or relaxing diet constraints to match more mess operators.
-            </p>
+          <div className="p-16 text-center rounded-3xl cyber-panel border border-white/[0.08] flex flex-col items-center gap-4">
+            <MapPin className="w-10 h-10 text-neutral-600" />
+            <div className="flex flex-col gap-1 max-w-sm">
+              <h3 className="font-mono font-bold text-white text-base">
+                No Qualifying Tiffins Located
+              </h3>
+              <p className="text-xs text-neutral-400">
+                Try expanding the search radius or raising the monthly budget ceiling.
+              </p>
+            </div>
             <Link
               href="/"
-              className="mt-2 px-4 py-2 rounded-xl bg-orange-600 text-white text-xs font-semibold hover:bg-orange-700 transition-colors"
+              className="mt-2 px-5 py-2.5 rounded-xl bg-amber-500 text-neutral-950 font-mono text-xs font-bold hover:bg-amber-400 transition-colors"
             >
-              Modify Search
+              Adjust Telemetry Filters
             </Link>
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
-            {matches.map((m, idx) => (
+          <div className="flex flex-col gap-4">
+            {matches.map((match, index) => (
               <ProviderCard
-                key={m.provider_id}
-                rank={idx + 1}
-                match={m}
-                provider={data?.top_provider?.id === m.provider_id ? data.top_provider : undefined}
+                key={match.provider_id}
+                rank={index + 1}
+                match={match}
+                provider={match.provider_id === data?.top_provider?.id ? data?.top_provider : undefined}
                 clusterId={cluster?.id}
               />
             ))}
@@ -168,7 +184,14 @@ function ResultsContent() {
 
 export default function ResultsPage() {
   return (
-    <Suspense fallback={<SkeletonLoader count={4} />}>
+    <Suspense
+      fallback={
+        <div className="py-12 flex flex-col gap-6">
+          <div className="h-24 bg-white/[0.05] rounded-3xl animate-pulse" />
+          <SkeletonLoader count={3} />
+        </div>
+      }
+    >
       <ResultsContent />
     </Suspense>
   )

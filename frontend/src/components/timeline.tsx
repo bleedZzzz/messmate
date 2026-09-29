@@ -8,7 +8,7 @@ export const Timeline = React.forwardRef<HTMLOListElement, TimelineProps>(
     return (
       <ol
         ref={ref}
-        className={cn("relative border-l border-stone-200 dark:border-stone-800 ml-3.5 space-y-6", className)}
+        className={cn("relative border-l border-white/[0.12] ml-3.5 space-y-6", className)}
         {...props}
       >
         {children}
@@ -41,10 +41,10 @@ export const TimelinePoint = React.forwardRef<HTMLDivElement, TimelinePointProps
       <div
         ref={ref}
         className={cn(
-          "absolute -left-[1.3125rem] top-1.5 flex h-6 w-6 items-center justify-center rounded-full border-2 bg-white dark:bg-stone-900 transition-colors",
+          "absolute -left-[1.3125rem] top-1.5 flex h-6 w-6 items-center justify-center rounded-full border-2 bg-[#0c0e14] transition-all",
           active
-            ? "border-orange-600 dark:border-orange-500 text-orange-600"
-            : "border-stone-300 dark:border-stone-700 text-stone-500",
+            ? "border-amber-400 text-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.5)]"
+            : "border-white/[0.18] text-neutral-500",
           className
         )}
         {...props}
@@ -59,7 +59,7 @@ export type TimelineContentProps = React.HTMLAttributes<HTMLDivElement>
 export const TimelineContent = React.forwardRef<HTMLDivElement, TimelineContentProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <div ref={ref} className={cn("flex flex-col gap-1", className)} {...props}>
+      <div ref={ref} className={cn("flex flex-col gap-1.5", className)} {...props}>
         {children}
       </div>
     )

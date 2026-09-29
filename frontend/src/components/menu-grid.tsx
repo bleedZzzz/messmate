@@ -1,100 +1,111 @@
 import { MenuPlan } from "@/lib/schemas"
-import { Calendar, Sparkles, RotateCcw, Moon, Sun } from "lucide-react"
+import { Calendar, Sparkles, RotateCcw, Moon, Sun, Utensils, CheckCircle } from "lucide-react"
 
 export interface MenuGridProps {
   menu: MenuPlan
 }
 
 const DAY_NAMES = [
-  "Monday (Day 1)",
-  "Tuesday (Day 2)",
-  "Wednesday (Day 3)",
-  "Thursday (Day 4)",
-  "Friday (Day 5)",
-  "Saturday (Day 6)",
-  "Sunday (Day 7)",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
 ]
 
 export function MenuGrid({ menu }: MenuGridProps) {
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-orange-50/70 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/40">
-        <div>
-          <h3 className="font-semibold text-stone-900 dark:text-stone-100 flex items-center gap-2 text-base">
-            <Calendar className="w-4 h-4 text-orange-600" />
-            7-Day Weekly Meal Rotation
-          </h3>
-          <p className="text-xs text-stone-600 dark:text-stone-400 mt-0.5">
-            Balanced weekly schedule satisfying dietary constraints and slot variety
-          </p>
+    <div className="flex flex-col gap-6">
+      {/* Top Banner with AI Verification State */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl cyber-panel border border-white/[0.08] bg-[#0c0e14]">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+            <Calendar className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="font-mono font-bold text-white text-base flex items-center gap-2">
+              7-Day Rotating Weekly Meal Schedule
+            </h3>
+            <p className="text-xs text-neutral-400 font-mono mt-0.5">
+              14 unique slot meals · Zero repeat within 7-day window · Balanced veg/protein ratios
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        <div className="self-start sm:self-auto">
           {menu.source === "llm" ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5" /> AI Model Plan
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-violet-500/15 border border-violet-500/30 text-violet-300 font-mono text-xs font-bold shadow-[0_0_15px_rgba(139,92,246,0.2)]">
+              <Sparkles className="w-3.5 h-3.5 text-violet-400" /> AI LLM Structured Plan
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 text-xs font-semibold">
-              <RotateCcw className="w-3.5 h-3.5" /> Deterministic Fallback Plan
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono text-xs font-bold shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+              <RotateCcw className="w-3.5 h-3.5 text-amber-400" /> Deterministic Rotation Engine
             </span>
           )}
         </div>
       </div>
 
+      {/* Rationale Quote */}
       {menu.rationale && (
-        <p className="text-xs text-stone-600 dark:text-stone-400 italic px-2">
-          &ldquo;{menu.rationale}&rdquo;
-        </p>
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] text-xs font-mono text-neutral-300 flex items-start gap-2.5">
+          <span className="text-amber-400 font-bold shrink-0">AI RATIONALE //</span>
+          <span className="italic leading-relaxed">&ldquo;{menu.rationale}&rdquo;</span>
+        </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-7 gap-3">
+      {/* 7-Day Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3.5">
         {menu.days.map((d) => {
-          const dayTitle = DAY_NAMES[d.day - 1] || `Day ${d.day}`
+          const dayName = DAY_NAMES[d.day - 1] || `Day ${d.day}`
           const isWeekend = d.day === 6 || d.day === 7
 
           return (
             <div
               key={d.day}
-              className={`flex flex-col rounded-2xl border p-3.5 gap-3 transition-shadow hover:shadow-md ${
+              className={`flex flex-col rounded-2xl cyber-panel border p-4 gap-3.5 transition-all hover:border-amber-500/40 hover:-translate-y-0.5 ${
                 isWeekend
-                  ? "border-orange-200 dark:border-orange-900/40 bg-orange-50/20 dark:bg-orange-950/10"
-                  : "border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900"
+                  ? "border-amber-500/30 bg-amber-500/[0.03]"
+                  : "border-white/[0.08] bg-[#0c0e14]/90"
               }`}
             >
-              <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800/80 pb-2">
-                <span className="font-bold text-xs text-stone-900 dark:text-stone-100">
-                  {dayTitle.split(" ")[0]}
+              {/* Day Header */}
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
+                <span className="font-mono font-bold text-xs text-white">
+                  {dayName}
                 </span>
-                <span className="text-[10px] text-stone-400 font-medium">Day {d.day}</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/[0.05] text-amber-400">
+                  D{d.day}
+                </span>
               </div>
 
-              {/* Lunch Pick */}
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1">
-                  <Sun className="w-3 h-3" /> Lunch
+              {/* Lunch Slot */}
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-amber-400 flex items-center gap-1">
+                  <Sun className="w-3 h-3 text-amber-400" /> Lunch
                 </span>
-                <div className="p-2 rounded-xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 flex flex-col gap-0.5">
-                  <span className="text-xs font-medium text-stone-900 dark:text-stone-100 leading-snug line-clamp-2">
+                <div className="p-3 rounded-xl bg-[#12141c] border border-white/[0.06] flex flex-col gap-1 shadow-inner">
+                  <span className="text-xs font-medium text-neutral-100 leading-snug">
                     {d.lunch.name}
                   </span>
-                  <span className="text-[9px] font-mono text-stone-400 truncate">
-                    #{d.lunch.dish_id.split("-").slice(-2).join("-")}
+                  <span className="text-[9px] font-mono text-neutral-500">
+                    ID: #{d.lunch.dish_id.split("-").slice(-1)[0]}
                   </span>
                 </div>
               </div>
 
-              {/* Dinner Pick */}
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-indigo-700 dark:text-indigo-400 flex items-center gap-1">
-                  <Moon className="w-3 h-3" /> Dinner
+              {/* Dinner Slot */}
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-violet-400 flex items-center gap-1">
+                  <Moon className="w-3 h-3 text-violet-400" /> Dinner
                 </span>
-                <div className="p-2 rounded-xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800 flex flex-col gap-0.5">
-                  <span className="text-xs font-medium text-stone-900 dark:text-stone-100 leading-snug line-clamp-2">
+                <div className="p-3 rounded-xl bg-[#12141c] border border-white/[0.06] flex flex-col gap-1 shadow-inner">
+                  <span className="text-xs font-medium text-neutral-100 leading-snug">
                     {d.dinner.name}
                   </span>
-                  <span className="text-[9px] font-mono text-stone-400 truncate">
-                    #{d.dinner.dish_id.split("-").slice(-2).join("-")}
+                  <span className="text-[9px] font-mono text-neutral-500">
+                    ID: #{d.dinner.dish_id.split("-").slice(-1)[0]}
                   </span>
                 </div>
               </div>
