@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import time
 from typing import Any, Literal, Protocol, TypeVar
 
 import httpx
@@ -165,21 +166,25 @@ class GroqProvider:
             "temperature": 0.2,
         }
 
+        start_time = time.time()
+        err_msg: str | None = None
+        result_obj: T | None = None
         try:
             async with httpx.AsyncClient(timeout=timeout) as client:
                 response = await client.post(self.base_url, headers=headers, json=payload)
 
             if response.status_code != 200:
-                raise LLMUnavailable(
-                    f"Groq API returned HTTP {response.status_code}: {response.text[:200]}"
-                )
+                err_msg = f"Groq API returned HTTP {response.status_code}: {response.text[:200]}"
+                raise LLMUnavailable(err_msg)
 
             data = response.json()
             content = data["choices"][0]["message"]["content"]
-            return schema.model_validate_json(content)
+            result_obj = schema.model_validate_json(content)
+            return result_obj
 
         except httpx.TimeoutException as exc:
-            raise TimeoutError(f"Groq request timed out after {timeout}s") from exc
+            err_msg = f"Groq request timed out after {timeout}s"
+            raise TimeoutError(err_msg) from exc
         except (
             httpx.HTTPError,
             json.JSONDecodeError,
@@ -187,7 +192,20 @@ class GroqProvider:
             KeyError,
             IndexError,
         ) as exc:
-            raise LLMUnavailable(f"Groq generation failed: {exc}") from exc
+            err_msg = f"Groq generation failed: {exc}"
+            raise LLMUnavailable(err_msg) from exc
+        finally:
+            duration_ms = max(0, int((time.time() - start_time) * 1000))
+            from app.observability import get_tracer
+
+            get_tracer().trace_generation(
+                name="groq-generation",
+                model=self.model,
+                prompt=prompt,
+                output=result_obj.model_dump() if result_obj is not None else None,
+                duration_ms=duration_ms,
+                error=err_msg,
+            )
 
 
 def get_llm_provider(settings: Settings | None = None) -> LLMProvider:

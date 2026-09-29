@@ -10,7 +10,6 @@ ARCHITECTURE.md §6.5 & PRD FR-17, FR-18:
 from __future__ import annotations
 
 import inspect
-import logging
 import time
 from collections.abc import Callable
 from typing import Any, Protocol, TypedDict, runtime_checkable
@@ -32,8 +31,9 @@ from app.models.domain import (
     ProviderMatch,
     TraceStep,
 )
+from app.observability import get_logger, get_tracer
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -200,6 +200,25 @@ async def run_step(
     if "trace" not in state or state["trace"] is None:
         state["trace"] = []
     state["trace"].append(step)
+
+    # Structured JSON log with agent name and duration (ARCHITECTURE.md §11)
+    logger.info(
+        "agent_step_completed",
+        agent=agent_name,
+        duration_ms=duration_ms,
+        used_llm=actual_used_llm,
+        fallback_used=actual_fallback_used,
+        error=error_msg,
+    )
+
+    # Langfuse tracing (clean no-op when keys are absent)
+    get_tracer().trace_agent(
+        agent_name=agent_name,
+        input_data={"args_count": len(args), "kwargs_keys": list(kwargs.keys())},
+        output_data={"status": "error" if error_msg else "ok", "has_result": result is not None},
+        duration_ms=duration_ms,
+        error=error_msg,
+    )
 
     return result
 

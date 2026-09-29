@@ -8,16 +8,21 @@ from collections import defaultdict
 from collections.abc import Callable
 from typing import Any
 
+import structlog.contextvars
 from fastapi import HTTPException, Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 
 class RequestIdMiddleware(BaseHTTPMiddleware):
-    """Middleware that ensures every request has a unique X-Request-ID header."""
+    """Middleware that ensures every request has a unique X-Request-ID header
+    and binds it to structlog contextvars.
+    """
 
     async def dispatch(self, request: Request, call_next: Callable[[Request], Any]) -> Response:
         req_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
         request.state.request_id = req_id
+        structlog.contextvars.clear_contextvars()
+        structlog.contextvars.bind_contextvars(request_id=req_id)
 
         response: Response = await call_next(request)
         response.headers["X-Request-ID"] = req_id

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
@@ -22,8 +21,9 @@ from app.api.routes_providers import router as providers_router
 from app.config import get_settings
 from app.data.seed import seed_database
 from app.db.base import Base, build_engine
+from app.observability.logging import configure_logging, get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 @asynccontextmanager
@@ -36,12 +36,13 @@ async def lifespan(application: FastAPI):
         with factory() as session:
             seed_database(session)
     except Exception as exc:
-        logger.warning("Startup database check/seed encountered warning: %s", exc)
+        logger.warning("Startup database check/seed encountered warning", error=str(exc))
     yield
 
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application instance."""
+    configure_logging(json_format=True)
     settings = get_settings()
 
     application = FastAPI(
