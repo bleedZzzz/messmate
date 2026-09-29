@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 import os
 import time
-from collections.abc import Iterator
+from collections.abc import Generator
 from contextlib import contextmanager
 from typing import Any
 
@@ -189,7 +189,7 @@ def get_tracer(settings: Settings | None = None) -> LangfuseTracer:
 @contextmanager
 def trace_agent_context(
     agent_name: str, input_data: Any = None, tracer: LangfuseTracer | None = None
-) -> Iterator[AgentTraceContext]:
+) -> Generator[AgentTraceContext, None, None]:
     """Context manager for tracing an agent execution with timing."""
     t = tracer or get_tracer()
     ctx = AgentTraceContext(agent_name=agent_name, input_data=input_data)
@@ -215,7 +215,7 @@ def trace_agent_context(
 @contextmanager
 def trace_llm_context(
     model: str, prompt: str, tracer: LangfuseTracer | None = None
-) -> Iterator[LLMTraceContext]:
+) -> Generator[LLMTraceContext, None, None]:
     """Context manager for tracing an LLM generation call with timing."""
     t = tracer or get_tracer()
     ctx = LLMTraceContext(model=model, prompt=prompt)

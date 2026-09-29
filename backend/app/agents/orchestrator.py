@@ -12,7 +12,7 @@ from __future__ import annotations
 import inspect
 import time
 from collections.abc import Callable
-from typing import Any, Protocol, TypedDict, runtime_checkable
+from typing import Any, Protocol, TypedDict, cast, runtime_checkable
 
 from langgraph.graph import END, StateGraph
 
@@ -460,7 +460,7 @@ def build_orchestrator_graph(
     llm_provider: LLMProvider | None = None,
 ) -> Any:
     """Build and compile the LangGraph StateGraph pipeline."""
-    graph: Any = StateGraph(PipelineState)
+    graph: Any = StateGraph(cast(Any, PipelineState))
 
     graph.add_node("demand", create_demand_node(cluster_source))
     graph.add_node("match", create_match_node(provider_source))
